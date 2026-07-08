@@ -14,10 +14,18 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local langdetect = require("config.langdetect")
+
+-- Disable netrw before it loads (we use mini-files and other pickers)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    -- dynamically import language extras based on project files
+    unpack(langdetect.specs()),
     -- import/override with your plugins
     { import = "plugins" },
   },

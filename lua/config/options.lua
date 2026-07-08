@@ -10,3 +10,28 @@ vim.opt.sidescrolloff = 8
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = false
+
+-- General QoL
+vim.opt.relativenumber = true
+vim.opt.number = true
+vim.opt.wrap = false
+vim.opt.smartindent = true
+vim.opt.undofile = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.hlsearch = false
+vim.opt.termguicolors = true
+vim.opt.signcolumn = "yes"
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+vim.opt.inccommand = "split" -- live preview substitutions
+vim.opt.confirm = true -- ask before closing unsaved buffers
+vim.opt.breakindent = true
+vim.opt.mouse = "a"
+
+-- Global statusline (works well with lualine)
+vim.opt.laststatus = 3
