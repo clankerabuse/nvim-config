@@ -11,6 +11,17 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = false
 
+-- Neovim's built-in ftplugins hardcode PEP8/language-recommended indent
+-- style for a few filetypes, which silently overrides the tabs-everywhere
+-- settings above:
+--   - $VIMRUNTIME/ftplugin/python.vim forces `expandtab tabstop=4
+--     softtabstop=4 shiftwidth=4` (i.e. 4 spaces) unless this is set to 0.
+--   - Markdown's equivalent knob (`g:markdown_recommended_style`) is
+--     already disabled by LazyVim's own defaults.
+-- Setting these to 0 keeps tabs (still displayed/indented at width 4)
+-- consistent across every filetype, Python included.
+vim.g.python_recommended_style = 0
+
 -- General QoL
 vim.opt.relativenumber = true
 vim.opt.number = true
@@ -41,3 +52,7 @@ vim.opt.laststatus = 3
 -- Paired with the `auto_read` autocmds in config/autocmds.lua, which poll
 -- for changes and run `:checktime` so this actually kicks in.
 vim.opt.autoread = true
+
+-- Disable auto-continuation of comments. After pressing Enter (or `o`/`O`)
+-- on a comment line, the next line should NOT start with a comment marker.
+vim.opt.formatoptions:remove({ "r", "o" })
