@@ -53,14 +53,14 @@ map("n", "<leader>uL", "<cmd>lua =<cr>", { desc = "Evaluate Lua expression" })
 
 -- Show dynamic language extras detected for this project
 map("n", "<leader>cl", function()
-  local info = require("config.langdetect").info()
-  local msg = string.format("Project root: %s\nDetected extras (%d):", info.root, info.count)
-  if info.count == 0 then
-    msg = msg .. " none"
-  else
-    for _, extra in ipairs(info.extras) do
-      msg = msg .. "\n  - " .. extra
-    end
-  end
-  vim.notify(msg, vim.log.levels.INFO, { title = "LangDetect" })
+	local info = require("config.langdetect").info()
+	local msg = string.format("Project root: %s\nDetected extras (%d):", info.root, info.count)
+	if info.count == 0 then
+		msg = msg .. " none"
+	else
+		for _, extra in ipairs(info.extras) do
+			msg = msg .. "\n  - " .. extra
+		end
+	end
+	vim.notify(msg, vim.log.levels.INFO, { title = "LangDetect" })
 end, { desc = "Show detected language extras" })

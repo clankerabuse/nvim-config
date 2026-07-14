@@ -51,17 +51,14 @@ vim.api.nvim_create_autocmd("FileType", {
 -- avante sidebar is streaming edits into a file you already have open).
 local auto_read_group = vim.api.nvim_create_augroup("auto_read", { clear = true })
 
-vim.api.nvim_create_autocmd(
-	{ "FocusGained", "TermClose", "TermLeave", "BufEnter", "CursorHold", "CursorHoldI" },
-	{
-		group = auto_read_group,
-		callback = function()
-			if vim.bo.buftype == "" then
-				vim.cmd("checktime")
-			end
-		end,
-	}
-)
+vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave", "BufEnter", "CursorHold", "CursorHoldI" }, {
+	group = auto_read_group,
+	callback = function()
+		if vim.bo.buftype == "" then
+			vim.cmd("checktime")
+		end
+	end,
+})
 
 -- Let the user know when a buffer was silently refreshed from disk, so a
 -- file changing underneath them (e.g. mid-edit by the agent) doesn't go
