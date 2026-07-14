@@ -35,3 +35,9 @@ vim.opt.mouse = "a"
 
 -- Global statusline (works well with lualine)
 vim.opt.laststatus = 3
+
+-- Auto-reload buffers that changed on disk (e.g. edits made by the
+-- avante/opencode agent, git checkouts, formatters run outside Neovim, etc.)
+-- Paired with the `auto_read` autocmds in config/autocmds.lua, which poll
+-- for changes and run `:checktime` so this actually kicks in.
+vim.opt.autoread = true

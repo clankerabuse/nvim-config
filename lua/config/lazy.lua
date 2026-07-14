@@ -20,15 +20,26 @@ local langdetect = require("config.langdetect")
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- NOTE: build this as a real list rather than `unpack(...)`-ing it inline
+-- inside the `spec` table literal below. A multi-value expression like
+-- `unpack(x)` is only expanded to multiple entries when it's the *last*
+-- item in a table constructor; in the middle of one (as it would be here,
+-- with `{ import = "plugins" }` following it) Lua silently truncates it to
+-- a single value. That would mean at most one dynamically detected
+-- language extra ever gets loaded (and none at all, i.e. a crash, when a
+-- project matches zero of them) instead of the full, variable-length list
+-- `langdetect.specs()` actually returns.
+local plugin_spec = {
+  -- add LazyVim and import its plugins
+  { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+}
+-- dynamically import language extras based on project files
+vim.list_extend(plugin_spec, langdetect.specs())
+-- import/override with your plugins
+table.insert(plugin_spec, { import = "plugins" })
+
 require("lazy").setup({
-  spec = {
-    -- add LazyVim and import its plugins
-    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    -- dynamically import language extras based on project files
-    unpack(langdetect.specs()),
-    -- import/override with your plugins
-    { import = "plugins" },
-  },
+  spec = plugin_spec,
   defaults = {
     -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
     -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.

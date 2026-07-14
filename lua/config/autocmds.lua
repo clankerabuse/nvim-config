@@ -42,12 +42,37 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- Check if a file changed on disk when gaining focus
-vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
-	group = vim.api.nvim_create_augroup("auto_read", { clear = true }),
+-- Auto-reload files changed on disk. This is what makes edits from the
+-- avante/opencode agent (or git, formatters, other external tools) show up
+-- immediately in any open buffer, without needing to manually `:e` it.
+-- `FocusGained`/`TermClose`/`TermLeave` catch the "left and came back" case,
+-- while `CursorHold`/`CursorHoldI`/`BufEnter` catch changes that happen while
+-- you're still sitting in the same window watching the agent work (e.g. the
+-- avante sidebar is streaming edits into a file you already have open).
+local auto_read_group = vim.api.nvim_create_augroup("auto_read", { clear = true })
+
+vim.api.nvim_create_autocmd(
+	{ "FocusGained", "TermClose", "TermLeave", "BufEnter", "CursorHold", "CursorHoldI" },
+	{
+		group = auto_read_group,
+		callback = function()
+			if vim.bo.buftype == "" then
+				vim.cmd("checktime")
+			end
+		end,
+	}
+)
+
+-- Let the user know when a buffer was silently refreshed from disk, so a
+-- file changing underneath them (e.g. mid-edit by the agent) doesn't go
+-- unnoticed.
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+	group = auto_read_group,
 	callback = function()
-		if vim.o.buftype ~= "nofile" then
-			vim.cmd("checktime")
-		end
+		vim.notify(
+			string.format("Reloaded from disk: %s", vim.fn.expand("<afile>:t")),
+			vim.log.levels.INFO,
+			{ title = "Auto-reload" }
+		)
 	end,
 })

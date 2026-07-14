@@ -26,6 +26,11 @@ map("n", "<leader><leader>q", "<cmd>q<cr>", { desc = "Quit window" })
 -- Clear search highlight
 map("n", "<leader>uh", "<cmd>noh<cr>", { desc = "Clear search highlight" })
 
+-- Manually check for (and reload) changes made on disk, e.g. by avante/opencode.
+-- Usually unnecessary thanks to the `auto_read` autocmds, but handy as an
+-- explicit "did it pick that up yet?" escape hatch.
+map("n", "<leader>uR", "<cmd>checktime<cr>", { desc = "Reload buffer from disk" })
+
 -- Window management
 map("n", "<leader>sv", "<C-w>v", { desc = "Split vertical" })
 map("n", "<leader>sh", "<C-w>s", { desc = "Split horizontal" })
