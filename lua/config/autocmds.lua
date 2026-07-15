@@ -60,6 +60,16 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave", "BufEnter
 	end,
 })
 
+-- Force 4-space tabs on ALL filetypes (overrides ftplugin defaults)
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("force_tabs", { clear = true }),
+	callback = function()
+		vim.bo.tabstop = 4
+		vim.bo.shiftwidth = 4
+		vim.bo.expandtab = false
+	end,
+})
+
 -- Let the user know when a buffer was silently refreshed from disk, so a
 -- file changing underneath them (e.g. mid-edit by the agent) doesn't go
 -- unnoticed.

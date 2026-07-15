@@ -1,12 +1,6 @@
 return {
 	"stevearc/conform.nvim",
 	opts = {
-		formatters_by_ft = {
-			javascript = { "prettierd", "prettier", stop_after_first = true },
-			typescript = { "prettierd", "prettier", stop_after_first = true },
-			javascriptreact = { "prettierd", "prettier", stop_after_first = true },
-			typescriptreact = { "prettierd", "prettier", stop_after_first = true },
-		},
 		formatters = {
 			prettier = {
 				prepend_args = { "--use-tabs", "--tab-width", "4" },
@@ -14,6 +8,11 @@ return {
 			prettierd = {
 				prepend_args = { "--use-tabs", "--tab-width", "4" },
 			},
+		},
+		default_format_opts = {
+			timeout_ms = 3000,
+			async = true,
+			quiet = false,
 		},
 	},
 }
