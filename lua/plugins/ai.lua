@@ -39,7 +39,30 @@ return {
 			},
 		},
 		keys = {
-			{ "<leader>aa", "<cmd>AvanteAsk<cr>", desc = "Avante: ask", mode = { "n", "v" } },
+			{
+			"<leader>aa",
+			function()
+				local avante = require("avante")
+				local sidebar = avante.get()
+				-- Stop any running agent and kill ACP subprocess
+				require("avante.api").stop()
+				if sidebar then
+					if sidebar.acp_client then
+						pcall(function() sidebar.acp_client:stop() end)
+						sidebar.acp_client = nil
+					end
+					-- Clean up all registered ACP clients globally
+					avante.cleanup_all_acp_clients()
+					if sidebar:is_open() then
+						sidebar:close({ goto_code_win = false })
+						sidebar:reset()
+					end
+				end
+				require("avante.api").ask({ new_chat = true })
+			end,
+			desc = "Avante: ask",
+			mode = { "n", "v" },
+		},
 			{ "<leader>ac", "<cmd>AvanteChat<cr>", desc = "Avante: chat" },
 			{ "<leader>an", "<cmd>AvanteChatNew<cr>", desc = "Avante: new chat" },
 			{ "<leader>ae", "<cmd>AvanteEdit<cr>", desc = "Avante: edit selection", mode = { "n", "v" } },
