@@ -48,24 +48,25 @@ return {
 		cmd = "Neogit",
 		keys = {
 			{ "<leader>gn", "<cmd>Neogit<cr>", desc = "Neogit" },
-			{ "<leader>gc", "<cmd>Neogit commit<cr>", desc = "Neogit commit" },
+			{ "<leader>gN", "<cmd>Neogit commit<cr>", desc = "Neogit commit" },
 		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"sindrets/diffview.nvim",
-			"nvim-telescope/telescope.nvim", -- optional, provides better pickers
 		},
 		config = true,
 	},
 
 	-- Side-by-side diff view
+	-- Keys intentionally avoid LazyVim's <leader>gd (git diff hunks) and
+	-- <leader>gh (gitsigns hunks group) — stealing those breaks core git UX.
 	{
 		"sindrets/diffview.nvim",
 		cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose", "DiffviewToggleFiles" },
 		keys = {
-			{ "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview open" },
-			{ "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", desc = "File history" },
-			{ "<leader>gH", "<cmd>DiffviewFileHistory<cr>", desc = "Repo history" },
+			{ "<leader>gV", "<cmd>DiffviewOpen<cr>", desc = "Diffview open" },
+			{ "<leader>gF", "<cmd>DiffviewFileHistory %<cr>", desc = "Diffview file history" },
+			{ "<leader>gA", "<cmd>DiffviewFileHistory<cr>", desc = "Diffview repo history" },
 		},
 	},
 
@@ -114,14 +115,15 @@ return {
 	},
 
 	-- LSP go-to preview window
+	-- Under <leader>p* (peek) so we don't clobber LazyVim's <leader>s search group.
 	{
 		"dnlhc/glance.nvim",
 		cmd = "Glance",
 		keys = {
-			{ "<leader>sg", "<cmd>Glance definitions<cr>", desc = "Glance definitions" },
-			{ "<leader>sr", "<cmd>Glance references<cr>", desc = "Glance references" },
-			{ "<leader>sy", "<cmd>Glance type_definitions<cr>", desc = "Glance type definitions" },
-			{ "<leader>sm", "<cmd>Glance implementations<cr>", desc = "Glance implementations" },
+			{ "<leader>pd", "<cmd>Glance definitions<cr>", desc = "Glance definitions" },
+			{ "<leader>pr", "<cmd>Glance references<cr>", desc = "Glance references" },
+			{ "<leader>py", "<cmd>Glance type_definitions<cr>", desc = "Glance type definitions" },
+			{ "<leader>pi", "<cmd>Glance implementations<cr>", desc = "Glance implementations" },
 		},
 		config = function()
 			require("glance").setup({
@@ -141,7 +143,7 @@ return {
 		},
 		keys = {
 			{
-				"<leader>sn",
+				"<leader>po",
 				function()
 					require("nvim-navbuddy").open()
 				end,
@@ -153,5 +155,15 @@ return {
 				lsp = { auto_attach = true },
 			})
 		end,
+	},
+
+	{
+		"folke/which-key.nvim",
+		optional = true,
+		opts = {
+			spec = {
+				{ "<leader>p", group = "peek" },
+			},
+		},
 	},
 }

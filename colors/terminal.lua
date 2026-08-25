@@ -697,23 +697,6 @@ hl("UfoPreviewWinBar", { fg = c.green, bg = c.bg_alt })
 hl("UfoFoldedEllipsis", { fg = c.fg_dim })
 hl("UfoCursorFoldedLine", { bg = c.bg_sel })
 
--- CodeCompanion / Avante
-hl("CodeCompanionChatHeader", { fg = c.green, bold = true })
-hl("CodeCompanionChatSeparator", { fg = c.fg_dark })
-hl("CodeCompanionChatTool", { fg = c.blue })
-hl("CodeCompanionChatVariable", { fg = c.orange })
-hl("CodeCompanionChatAssistant", { fg = c.green })
-hl("CodeCompanionChatUser", { fg = c.blue })
-hl("AvanteTitle", { fg = c.bg, bg = c.green, bold = true })
-hl("AvanteSubtitle", { fg = c.bg, bg = c.blue, bold = true })
-hl("AvanteThirdTitle", { fg = c.bg, bg = c.purple, bold = true })
-hl("AvanteReversedTitle", { fg = c.green })
-hl("AvanteReversedSubtitle", { fg = c.blue })
-hl("AvanteReversedThirdTitle", { fg = c.purple })
-hl("AvanteHint", { fg = c.green })
-hl("AvanteAnnotation", { fg = c.fg_dim })
-hl("AvanteSuggestion", { fg = c.fg_dim })
-
 -- DAP
 hl("DapBreakpoint", { fg = c.red })
 hl("DapBreakpointCondition", { fg = c.yellow })

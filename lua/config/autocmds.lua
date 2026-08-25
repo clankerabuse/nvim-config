@@ -42,13 +42,10 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- Auto-reload files changed on disk. This is what makes edits from the
--- avante/opencode agent (or git, formatters, other external tools) show up
--- immediately in any open buffer, without needing to manually `:e` it.
--- `FocusGained`/`TermClose`/`TermLeave` catch the "left and came back" case,
--- while `CursorHold`/`CursorHoldI`/`BufEnter` catch changes that happen while
--- you're still sitting in the same window watching the agent work (e.g. the
--- avante sidebar is streaming edits into a file you already have open).
+-- Auto-reload files changed on disk (git, formatters, other external tools)
+-- so they show up immediately without needing to manually `:e`.
+-- `FocusGained`/`TermClose`/`TermLeave` catch the "left and came back" case;
+-- `CursorHold`/`CursorHoldI`/`BufEnter` catch changes while you stay focused.
 local auto_read_group = vim.api.nvim_create_augroup("auto_read", { clear = true })
 
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave", "BufEnter", "CursorHold", "CursorHoldI" }, {
@@ -67,12 +64,12 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.bo.tabstop = 4
 		vim.bo.shiftwidth = 4
 		vim.bo.expandtab = false
+		-- ftplugins re-add comment continuation; keep Enter/`o` from extending comments
+		vim.opt_local.formatoptions:remove({ "r", "o" })
 	end,
 })
 
--- Let the user know when a buffer was silently refreshed from disk, so a
--- file changing underneath them (e.g. mid-edit by the agent) doesn't go
--- unnoticed.
+-- Let the user know when a buffer was silently refreshed from disk.
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
 	group = auto_read_group,
 	callback = function()

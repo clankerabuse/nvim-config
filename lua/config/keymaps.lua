@@ -19,37 +19,30 @@ map("v", "K", ":m '<-2<cr>gv=gv", { desc = "Move selection up" })
 -- Better paste (don't overwrite register when pasting over selection)
 map("v", "p", '"_dP', { desc = "Paste without yanking" })
 
--- Quick save and quit (avoid conflicts with LazyVim quit group)
+-- Quick save and quit (avoid conflicts with LazyVim quit/window groups)
 map("n", "<leader><leader>w", "<cmd>w<cr>", { desc = "Save file" })
 map("n", "<leader><leader>q", "<cmd>q<cr>", { desc = "Quit window" })
 
--- Clear search highlight
-map("n", "<leader>uh", "<cmd>noh<cr>", { desc = "Clear search highlight" })
+-- Clear search highlight (LazyVim already owns most of <leader>u*)
+map("n", "<leader>uH", "<cmd>noh<cr>", { desc = "Clear search highlight" })
 
--- Manually check for (and reload) changes made on disk, e.g. by avante/opencode.
+-- Manually check for (and reload) changes made on disk.
 -- Usually unnecessary thanks to the `auto_read` autocmds, but handy as an
 -- explicit "did it pick that up yet?" escape hatch.
 map("n", "<leader>uR", "<cmd>checktime<cr>", { desc = "Reload buffer from disk" })
 
--- Window management
-map("n", "<leader>sv", "<C-w>v", { desc = "Split vertical" })
-map("n", "<leader>sh", "<C-w>s", { desc = "Split horizontal" })
-map("n", "<leader>se", "<C-w>=", { desc = "Equal splits" })
-map("n", "<leader>sx", "<cmd>close<cr>", { desc = "Close split" })
+-- Window management under LazyVim's <leader>w group (NOT <leader>s — that is search)
+map("n", "<leader>wv", "<C-w>v", { desc = "Split vertical" })
+map("n", "<leader>ws", "<C-w>s", { desc = "Split horizontal" })
+map("n", "<leader>we", "<C-w>=", { desc = "Equal splits" })
+map("n", "<leader>wx", "<cmd>close<cr>", { desc = "Close split" })
 
--- Diagnostic quick navigation
-map("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-map("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
-
--- Buffer switching
+-- Buffer switching (LazyVim also sets these; keep the familiar Shift-h/l)
 map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
 map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
 
--- Toggle wrap
-map("n", "<leader>uw", "<cmd>set wrap!<cr>", { desc = "Toggle wrap" })
-
--- Evaluate lua expression
-map("n", "<leader>uL", "<cmd>lua =<cr>", { desc = "Evaluate Lua expression" })
+-- Prefill :lua= so an expression can be typed (the old <cmd>lua =<cr> evaluated nothing)
+map("n", "<leader>uL", ":lua=", { desc = "Evaluate Lua expression" })
 
 -- Show dynamic language extras detected for this project
 map("n", "<leader>cl", function()

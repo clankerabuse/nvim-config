@@ -273,8 +273,9 @@ local function scan_dir(root, max_depth, max_files)
 	max_depth = max_depth or 3
 	max_files = max_files or 500
 
-	local files = {}
-	local queue = { { path = root, depth = 0 } }
+	local files = {} -- basename only (fast path for "*.py" style markers)
+	local rel_files = {} -- path relative to root (for ".github/**/*.yml" etc.)
+	local queue = { { path = root, depth = 0, rel = "" } }
 
 	while #queue > 0 and #files < max_files do
 		local item = table.remove(queue, 1)
@@ -294,19 +295,23 @@ local function scan_dir(root, max_depth, max_files)
 			end
 
 			local full = item.path .. "/" .. name
+			local rel = item.rel == "" and name or (item.rel .. "/" .. name)
 			if typ == "directory" then
-				if not excluded_dirs[name] and not starts_with_dot(name) then
-					table.insert(queue, { path = full, depth = item.depth + 1 })
+				-- Allow scanning selected dotted dirs that hold real project markers
+				local allow_dot = name == ".github"
+				if not excluded_dirs[name] and (allow_dot or not starts_with_dot(name)) then
+					table.insert(queue, { path = full, depth = item.depth + 1, rel = rel })
 				end
 			elseif typ == "file" then
 				table.insert(files, name)
+				table.insert(rel_files, rel)
 			end
 		end
 
 		::continue::
 	end
 
-	return files
+	return files, rel_files
 end
 
 local function glob_to_pattern(glob)
@@ -314,10 +319,11 @@ local function glob_to_pattern(glob)
 	return "^" .. pattern .. "$"
 end
 
-local function match_patterns(files, patterns)
+local function match_patterns(files, rel_files, patterns)
 	for _, pattern in ipairs(patterns) do
 		local lua_pattern = glob_to_pattern(pattern)
-		for _, file in ipairs(files) do
+		local haystack = pattern:find("/") and rel_files or files
+		for _, file in ipairs(haystack) do
 			if file:match(lua_pattern) then
 				return true
 			end
@@ -327,12 +333,12 @@ local function match_patterns(files, patterns)
 end
 
 local function detect_files(root)
-	local files = scan_dir(root, 3, 500)
+	local files, rel_files = scan_dir(root, 3, 500)
 	local detected_extras = {}
 	local detected_plugins = {}
 
 	for _, lang in ipairs(M.languages) do
-		if match_patterns(files, lang.files) then
+		if match_patterns(files, rel_files, lang.files) then
 			for _, extra in ipairs(lang.extras) do
 				detected_extras[extra] = true
 			end
